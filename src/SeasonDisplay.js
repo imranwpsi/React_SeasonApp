@@ -1,39 +1,35 @@
 import React from 'react';
+import  './SeasonDisplay.css';
+
+const seasonConfig = {
+    summer: {
+        text: "Let's hit the beach!",
+        iconName: 'sun'
+    },
+    winter: {
+        text: 'Burr, it is cold!',
+        iconName: 'snowflake'
+    }
+}
 
 const getSeason = (lat, month) => {
     if(month > 2 && month < 9 ) {
-        return lat > 0 ? 'Summer' : 'Winter';
+        return lat > 0 ? 'summer' : 'winter';
     } else {
-        return lat > 0 ? 'Winter' : 'Summer';
+        return lat > 0 ? 'winter' : 'summer';
     }
 }
 
 class SeasonDisplay extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = { lat: null,  errMsg: null};
-    // }
-
-    state = { lat: null,  errMsg: null};
-
-    componentDidMount() {
-        window.navigator.geolocation.getCurrentPosition(
-            position => this.setState({ lat: position.coords.latitude }),
-            err => this.setState({ errMsg: err.message })
-        );
-    }
-
     render(){
-        let latStatus = this.state.lat && !this.state.errMsg;
-        let errStatus = !this.state.lat && this.state.errMsg;
-
-        const season = getSeason(this.state.lat, new Date().getMonth());
+        const season = getSeason(this.props.lat, new Date().getMonth());
+        const {text, iconName} = seasonConfig[season];
 
         return (
-            <div>
-                {latStatus ? <div>{season === 'Winter' ? 'Bur, it is chilly' : 'Lets hit the beach'}</div> : ''}
-                {errStatus ? <div>Error: {this.state.errMsg}</div> : ''}
-                {!latStatus && !errStatus ? <div>Loading...</div> : ''}
+            <div className={`season-display ${season}`}>
+                <i className={`${iconName} icon massive icon-left`} />
+                <h1>{text}</h1>
+                <i className={`${iconName} icon massive icon-right`} />
             </div>
         )
     }
